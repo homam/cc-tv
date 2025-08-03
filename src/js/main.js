@@ -16,10 +16,9 @@ class Dashboard {
         // Initialize all modules
         this.globe.init();
         this.charts.init();
-        this.ui.updateMetrics();
         
-        // Start data simulation
-        setInterval(() => this.dataSimulation.updateData(), 1200);
+        // Start the enhanced streaming system
+        this.dataSimulation.startStreaming();
         this.dataSimulation.startFocusCycle();
     }
 }

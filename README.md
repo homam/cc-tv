@@ -1,117 +1,250 @@
-# Live Performance Dashboard
+# CC-TV Dashboard - Enhanced Streaming Analytics
 
-A modular, real-time performance dashboard with 3D globe visualization, interactive charts, and live data simulation.
+A real-time analytics dashboard with comprehensive streaming data visualization for views, leads, sales, transactions, revenue, cost, and eCPA metrics both globally and per country.
 
-## Features
+## 🚀 Features
 
-- **3D Interactive Globe**: Real-time visualization of global activity using Three.js
-- **Live Data Simulation**: Dynamic updates of metrics, sales, and revenue
-- **Interactive Charts**: Payment methods, revenue by offers, weekly trends, and country performance
-- **Focus Mode**: Automatic country highlighting with detailed analytics
-- **Responsive Design**: Modern UI with Tailwind CSS
+### Enhanced Data Structure
+- **Global Metrics**: Comprehensive tracking of views, leads, sales, transactions, revenue, cost, eCPA, and conversion rates
+- **Country-Specific Metrics**: Detailed analytics for each country with individual performance indicators
+- **Real-Time Streaming**: Live data updates with event-driven architecture
+- **Trend Analysis**: Hourly trend calculations and performance indicators
 
-## Project Structure
+### Streaming Analytics
+- **Real-Time Events**: Live tracking of views, leads, sales, and transactions
+- **Event Metadata**: Rich event data including payment methods, offers, customer segments, and device information
+- **Alert System**: Intelligent alerts for unusual activity patterns and performance issues
+- **Performance Indicators**: ROI, profit margin, average order value, and lead-to-sale ratios
 
+### Data Visualization
+- **Interactive Globe**: 3D globe visualization with real-time event sparks and revenue arcs
+- **Metrics Dashboard**: Real-time display of all key performance indicators
+- **Country Focus**: Detailed country-specific analytics with drill-down capabilities
+- **Trend Indicators**: Visual trend analysis with color-coded indicators
+
+## 📊 Data Structure
+
+### Global Metrics
+```javascript
+globalMetrics: {
+    views: { current: number, trend: number, hourly: [] },
+    leads: { current: number, trend: number, hourly: [] },
+    sales: { current: number, trend: number, hourly: [] },
+    transactions: { current: number, trend: number, hourly: [] },
+    revenue: { current: number, trend: number, hourly: [] },
+    cost: { current: number, trend: number, hourly: [] },
+    ecpa: { current: number, trend: number, hourly: [] },
+    conversionRate: { current: number, trend: number, hourly: [] }
+}
 ```
-src/
-├── index.html              # Main HTML file
-├── styles/
-│   └── main.css           # All CSS styles
-├── js/
-│   ├── main.js            # Main application entry point
-│   ├── config/
-│   │   └── data.js        # Data configuration and state management
-│   ├── utils/
-│   │   └── helpers.js     # Utility functions (animations, calculations)
-│   └── modules/
-│       ├── globe.js       # 3D globe functionality (Three.js)
-│       ├── charts.js      # Chart.js integration and management
-│       ├── ui.js          # UI updates and interactions
-│       └── dataSimulation.js # Live data simulation and updates
+
+### Country Metrics
+Each country includes the same comprehensive metrics structure with country-specific data and performance indicators.
+
+### Streaming Events
+```javascript
+streamData: {
+    realTimeEvents: [
+        {
+            id: string,
+            timestamp: number,
+            type: 'view' | 'lead' | 'sale' | 'transaction',
+            country: string,
+            location: { lat: number, lon: number },
+            value: number,
+            metadata: {
+                paymentMethod?: string,
+                offer?: string,
+                customerSegment?: string,
+                source?: string,
+                quality?: string,
+                device?: string,
+                referrer?: string
+            }
+        }
+    ],
+    alerts: [
+        {
+            id: string,
+            message: string,
+            type: 'success' | 'warning' | 'error' | 'info',
+            timestamp: number
+        }
+    ]
+}
 ```
 
-## Modules Overview
+## 🛠️ Architecture
 
-### 1. **Globe Module** (`js/modules/globe.js`)
-- Handles 3D globe visualization using Three.js
-- Manages camera controls, animations, and visual effects
-- Creates acquisition events, revenue arcs, and view sparks
-- Implements zoom functionality for country focus
+### Core Modules
 
-### 2. **Charts Module** (`js/modules/charts.js`)
-- Manages all Chart.js instances
-- Handles chart updates and data visualization
-- Supports payment methods, offers, trends, and country charts
+#### DataSimulation (`src/js/modules/dataSimulation.js`)
+- **Streaming Data Generation**: Creates realistic streaming events every 2 seconds
+- **Event Processing**: Handles different event types with appropriate metadata
+- **Metrics Calculation**: Updates global and country-specific metrics in real-time
+- **Alert System**: Monitors performance and generates intelligent alerts
+- **Data Export**: Provides comprehensive data export capabilities
 
-### 3. **UI Module** (`js/modules/ui.js`)
-- Updates DOM elements with live data
-- Manages focus mode transitions
-- Handles metric animations and progress bars
+#### UI (`src/js/modules/ui.js`)
+- **Metrics Display**: Real-time display of all key performance indicators
+- **Event Visualization**: Shows streaming events with rich metadata
+- **Alert Management**: Displays and manages system alerts
+- **Country Focus**: Handles country-specific analytics views
+- **Report Generation**: Creates comprehensive analytics reports
 
-### 4. **Data Simulation Module** (`js/modules/dataSimulation.js`)
-- Generates realistic live data updates
-- Simulates sales, views, and revenue
-- Coordinates globe effects with data changes
+#### AnalyticsHelpers (`src/js/utils/helpers.js`)
+- **Data Formatting**: Currency, percentage, and number formatting utilities
+- **Trend Calculation**: Computes trend indicators and performance metrics
+- **Event Processing**: Handles event metadata and formatting
+- **Performance Indicators**: Calculates ROI, profit margins, and other KPIs
+- **Data Export**: Comprehensive data export and reporting utilities
 
-### 5. **Configuration** (`js/config/data.js`)
-- Centralized state management
-- Chart configurations
-- Static data (countries, banks, metrics)
+### Data Flow
 
-### 6. **Utilities** (`js/utils/helpers.js`)
-- Animation functions (countUp, tween)
-- Geographic calculations (latLonToVector3)
-- Easing functions
+1. **Event Generation**: `DataSimulation` generates realistic streaming events
+2. **Metrics Update**: Events trigger updates to global and country metrics
+3. **UI Refresh**: Updated metrics are displayed in real-time
+4. **Visual Effects**: Globe and charts update with new data
+5. **Alert Monitoring**: System monitors for unusual patterns and generates alerts
 
-## Getting Started
+## 🎯 Key Metrics
 
-1. **Clone the repository**
-2. **Open `src/index.html`** in a modern web browser
-3. **View the dashboard** - it will automatically start with live data simulation
+### Primary Metrics
+- **Views**: Total page views and traffic
+- **Leads**: Generated leads and prospects
+- **Sales**: Completed sales transactions
+- **Transactions**: Total transaction volume
+- **Revenue**: Total revenue generated
+- **Cost**: Total cost of operations
+- **eCPA**: Effective cost per acquisition
+- **Conversion Rate**: Lead to sale conversion percentage
 
-## Dependencies
+### Performance Indicators
+- **ROI**: Return on investment percentage
+- **Profit Margin**: Revenue minus cost percentage
+- **Average Order Value**: Revenue per sale
+- **Lead to Sale Ratio**: Conversion efficiency
 
-- **Three.js**: 3D graphics and globe visualization
-- **Chart.js**: Interactive charts and data visualization
-- **Tailwind CSS**: Utility-first CSS framework
-- **Inter Font**: Modern typography
+## 🔧 Usage
 
-## Browser Support
+### Starting the Dashboard
+```javascript
+import { DataSimulation } from './modules/dataSimulation.js';
+import { UI } from './modules/ui.js';
 
-- Modern browsers with ES6 module support
-- WebGL support for 3D graphics
-- Canvas support for charts
+const dataSim = new DataSimulation(globe, charts, ui);
+dataSim.startStreaming();
+```
 
-## Customization
+### Accessing Analytics Data
+```javascript
+import { AnalyticsHelpers } from './utils/helpers.js';
 
-### Adding New Metrics
-1. Update the state in `js/config/data.js`
-2. Add corresponding UI elements in `index.html`
-3. Update the UI module to handle new metrics
+// Get global metrics
+const globalMetrics = AnalyticsHelpers.getGlobalMetrics();
 
-### Modifying Charts
-1. Edit chart configurations in `js/config/data.js`
-2. Update chart methods in `js/modules/charts.js`
+// Get country-specific metrics
+const countryMetrics = AnalyticsHelpers.getCountryMetrics('USA');
 
-### Changing Data Simulation
-1. Modify the `DataSimulation` class in `js/modules/dataSimulation.js`
-2. Adjust update frequencies and data ranges
+// Get streaming events
+const events = AnalyticsHelpers.getStreamingEvents(10);
 
-## Architecture Benefits
+// Export comprehensive data
+const exportData = AnalyticsHelpers.exportMetricsData();
+```
 
-- **Modularity**: Each feature is isolated in its own module
-- **Maintainability**: Easy to modify individual components
-- **Scalability**: Simple to add new features or modify existing ones
-- **Reusability**: Modules can be reused in other projects
-- **Testability**: Each module can be tested independently
+### Data Export
+```javascript
+// Export analytics data
+ui.exportData();
 
-## Performance
+// Generate comprehensive report
+ui.generateReport();
+```
 
-- Efficient 3D rendering with Three.js
-- Optimized chart updates
-- Smooth animations with requestAnimationFrame
-- Memory management for 3D objects
+## 📈 Event Types
 
-## License
+### View Events
+- **Type**: `view`
+- **Value**: Number of page views
+- **Metadata**: Device type, referrer source
 
-This project is open source and available under the MIT License. 
+### Lead Events
+- **Type**: `lead`
+- **Value**: Number of leads generated
+- **Metadata**: Lead source, quality rating
+
+### Sale Events
+- **Type**: `sale`
+- **Value**: Sale amount in currency
+- **Metadata**: Payment method, offer, customer segment
+
+### Transaction Events
+- **Type**: `transaction`
+- **Value**: Transaction amount
+- **Metadata**: Payment processing details
+
+## 🎨 Visualization Features
+
+### Globe Effects
+- **View Sparks**: Visual indicators for page views
+- **Lead Sparks**: Special effects for lead generation
+- **Acquisition Events**: Highlight successful sales
+- **Revenue Arcs**: Show money flow to payment processors
+
+### Dashboard Elements
+- **Metrics Cards**: Real-time display of all KPIs
+- **Trend Indicators**: Visual trend analysis with arrows and colors
+- **Event Stream**: Live feed of streaming events
+- **Alert Panel**: System alerts and notifications
+- **Performance Grid**: Key performance indicators
+
+## 🔍 Monitoring & Alerts
+
+### Alert Types
+- **High Sales Activity**: Detects unusual sales spikes
+- **Low Conversion Rate**: Warns about poor conversion performance
+- **Performance Issues**: Monitors for system anomalies
+
+### Alert Management
+- Real-time alert generation
+- Time-based alert tracking
+- Alert severity classification
+- Historical alert analysis
+
+## 📊 Reporting
+
+### Export Formats
+- **JSON Export**: Complete data structure export
+- **HTML Reports**: Formatted analytics reports
+- **Real-time Dashboards**: Live performance monitoring
+
+### Report Contents
+- Summary metrics and KPIs
+- Top performing countries
+- Recent activity timeline
+- System alerts and notifications
+- Performance trend analysis
+
+## 🚀 Performance
+
+- **Real-time Updates**: 2-second update intervals
+- **Event Buffering**: Efficient event processing and storage
+- **Memory Management**: Automatic cleanup of old data
+- **Scalable Architecture**: Modular design for easy expansion
+
+## 🔧 Configuration
+
+### Update Intervals
+- **Streaming**: 2 seconds
+- **UI Updates**: Real-time
+- **Alert Checks**: Every update cycle
+- **Data Cleanup**: Automatic hourly cleanup
+
+### Data Retention
+- **Events**: Last 50 events
+- **Alerts**: Last 10 alerts
+- **Hourly Data**: Last 24 hours
+- **Historical Data**: Configurable retention
+
+This enhanced module provides a comprehensive streaming analytics solution with detailed metrics tracking, real-time visualization, and intelligent alerting for optimal performance monitoring. 

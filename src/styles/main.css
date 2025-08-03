@@ -5,17 +5,48 @@ body {
     overflow: hidden; /* Prevent scrollbars */
 }
 
+/* Add real-time update animations */
+@keyframes metricUpdate {
+    0% { background-color: rgba(59, 130, 246, 0.1); }
+    50% { background-color: rgba(59, 130, 246, 0.3); }
+    100% { background-color: transparent; }
+}
+
+@keyframes pulse {
+    0% { opacity: 0.75; }
+    50% { opacity: 1; }
+    100% { opacity: 0.75; }
+}
+
+.metric-update {
+    animation: metricUpdate 0.3s ease-in-out;
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+
+.pulse {
+    animation: pulse 0.5s ease-in-out;
+}
+
+.trend-badge {
+    display: inline-block;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Real-time indicator styles */
+#realtime-indicator {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Enhanced metric card animations */
 .metric-card {
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
+    transition: all 0.3s ease-in-out;
 }
 
 .metric-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    border-color: rgba(79, 70, 229, 0.7);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .metric-value {
@@ -54,4 +85,15 @@ body {
 
 .view-container {
     transition: opacity 0.5s ease-in-out;
+} 
+
+/* Live data streaming effect */
+@keyframes liveStream {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.live-data {
+    animation: liveStream 2s infinite;
 } 

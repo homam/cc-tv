@@ -156,7 +156,12 @@ export class Globe {
     createAcquisitionEvent(lat, lon) {
         if (!this.group) return;
         const position = latLonToVector3(lat, lon, this.GLOBE_RADIUS);
-        const beamGeo = new THREE.CylinderGeometry(1, 1.5, 40, 8, 1, true);
+        
+        // Adjust beam size based on focus state
+        const beamSize = this.isFocused ? 2 : 1;
+        const beamHeight = this.isFocused ? 60 : 40;
+        
+        const beamGeo = new THREE.CylinderGeometry(beamSize, beamSize * 1.5, beamHeight, 8, 1, true);
         const beamMat = new THREE.MeshBasicMaterial({ color: 0x86efac, transparent: true, opacity: 0.8, side: THREE.DoubleSide });
         const beam = new THREE.Mesh(beamGeo, beamMat);
         beam.position.copy(position);
@@ -187,11 +192,16 @@ export class Globe {
         const curve = new THREE.QuadraticBezierCurve3(startVec, midVec, endVec);
         const points = curve.getPoints(50);
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
-        const arcMaterial = new THREE.LineBasicMaterial({ color: 0x67e8f9, transparent: true, opacity: 0.9, linewidth: 3 });
+        
+        // Adjust arc appearance based on focus state
+        const lineWidth = this.isFocused ? 5 : 3;
+        const arcMaterial = new THREE.LineBasicMaterial({ color: 0x67e8f9, transparent: true, opacity: 0.9, linewidth: lineWidth });
         const arc = new THREE.Line(geometry, arcMaterial);
         this.group.add(arc);
         
-        const particleGeo = new THREE.SphereGeometry(1.5, 8, 8);
+        // Adjust particle size based on focus state
+        const particleSize = this.isFocused ? 2.5 : 1.5;
+        const particleGeo = new THREE.SphereGeometry(particleSize, 8, 8);
         const particleMat = new THREE.MeshBasicMaterial({ color: 0xecfdf5 });
         const particle = new THREE.Mesh(particleGeo, particleMat);
         this.group.add(particle);
@@ -219,8 +229,16 @@ export class Globe {
         if (!this.group) return;
         const lat = Math.random() * 180 - 90;
         const lon = Math.random() * 360 - 180;
+        this.createViewSparkAtLocation(lat, lon);
+    }
+
+    createViewSparkAtLocation(lat, lon) {
+        if (!this.group) return;
         const position = latLonToVector3(lat, lon, this.GLOBE_RADIUS + 0.5);
-        const sparkGeo = new THREE.SphereGeometry(0.6, 8, 8);
+        
+        // Adjust spark size based on focus state
+        const sparkSize = this.isFocused ? 1.2 : 0.6;
+        const sparkGeo = new THREE.SphereGeometry(sparkSize, 8, 8);
         const sparkMat = new THREE.MeshBasicMaterial({ color: 0xe0e7ff, transparent: true, opacity: 0.9 });
         const spark = new THREE.Mesh(sparkGeo, sparkMat);
         spark.position.copy(position);
@@ -229,6 +247,60 @@ export class Globe {
         let opacity = 1;
         const animateSpark = () => {
             opacity -= 0.05;
+            spark.material.opacity = opacity;
+            if (opacity > 0) {
+                requestAnimationFrame(animateSpark);
+            } else {
+                this.group.remove(spark);
+                spark.geometry.dispose();
+                spark.material.dispose();
+            }
+        };
+        animateSpark();
+    }
+
+    createLeadSparkAtLocation(lat, lon) {
+        if (!this.group) return;
+        const position = latLonToVector3(lat, lon, this.GLOBE_RADIUS + 0.5);
+        
+        // Adjust spark size based on focus state
+        const sparkSize = this.isFocused ? 1.4 : 0.8;
+        const sparkGeo = new THREE.SphereGeometry(sparkSize, 8, 8);
+        const sparkMat = new THREE.MeshBasicMaterial({ color: 0xfbbf24, transparent: true, opacity: 0.9 });
+        const spark = new THREE.Mesh(sparkGeo, sparkMat);
+        spark.position.copy(position);
+        this.group.add(spark);
+        
+        let opacity = 1;
+        const animateSpark = () => {
+            opacity -= 0.04;
+            spark.material.opacity = opacity;
+            if (opacity > 0) {
+                requestAnimationFrame(animateSpark);
+            } else {
+                this.group.remove(spark);
+                spark.geometry.dispose();
+                spark.material.dispose();
+            }
+        };
+        animateSpark();
+    }
+
+    createTransactionSparkAtLocation(lat, lon) {
+        if (!this.group) return;
+        const position = latLonToVector3(lat, lon, this.GLOBE_RADIUS + 0.5);
+        
+        // Adjust spark size based on focus state
+        const sparkSize = this.isFocused ? 1.6 : 1.0;
+        const sparkGeo = new THREE.SphereGeometry(sparkSize, 8, 8);
+        const sparkMat = new THREE.MeshBasicMaterial({ color: 0xa78bfa, transparent: true, opacity: 0.9 });
+        const spark = new THREE.Mesh(sparkGeo, sparkMat);
+        spark.position.copy(position);
+        this.group.add(spark);
+        
+        let opacity = 1;
+        const animateSpark = () => {
+            opacity -= 0.03;
             spark.material.opacity = opacity;
             if (opacity > 0) {
                 requestAnimationFrame(animateSpark);
