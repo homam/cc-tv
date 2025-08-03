@@ -2,7 +2,8 @@ import { state } from '../config/data.js';
 import type { GlobeComponent } from './GlobeComponent.js';
 import type { ChartsComponent } from './ChartsComponent.js';
 import type { UIComponent } from './UIComponent.js';
-import type { StreamingEvent, Alert } from '../types/index.js';
+import type { StreamingEvent, Alert, GlobalMetrics } from '../types/index.js';
+import { getRandomCity, getRandomCityByCountry, majorCities } from '../config/cities-data.js';
 
 export class DataSimulationComponent {
   private globe: GlobeComponent;
@@ -17,6 +18,10 @@ export class DataSimulationComponent {
     
     // Initialize enhanced data structure
     this.initializeEnhancedData();
+
+    (window as any).zoomToCountry = function(lat: number, lon: number) {
+      globe.zoomToCountry({ lat, lon });
+    };
   }
 
   private initializeEnhancedData(): void {
@@ -97,7 +102,7 @@ export class DataSimulationComponent {
     this.processDataBuffer();
 
     // Create visual effects
-    this.createStreamingEffects();
+    // this.createStreamingEffects();
 
     // Update UI
     this.updateUI();
@@ -107,37 +112,92 @@ export class DataSimulationComponent {
     
   }
 
+  private async getCityForEvent(countryKey: string): Promise<{ lat: number; lon: number; name: string }> {
+    // Try to get city from static data first (faster)
+    const staticCity = getRandomCityByCountry(countryKey);
+    if (staticCity) {
+      return { lat: staticCity.lat, lon: staticCity.lon, name: staticCity.name };
+    }
+
+    // Fallback to random city from any country
+    const fallbackCity = getRandomCity();
+    return { lat: fallbackCity.lat, lon: fallbackCity.lon, name: fallbackCity.name };
+  }
+
   private generateStreamingEvents(): void {
-    const eventTypes: Array<'view' | 'lead' | 'sale' | 'transaction'> = ['view', 'lead', 'sale', 'transaction'];
     const countries = Object.keys(state.countries);
     
     // Generate 2-8 events per cycle for more frequent updates
-    const eventCount = Math.floor(Math.random() * 7) + 2;
+    const eventCount = Math.floor(Math.random() * 100) + 2;
     
     for (let i = 0; i < eventCount; i++) {
-      const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+      const eventType = this.getWeightedEventType();
       const countryKey = countries[Math.floor(Math.random() * countries.length)];
-      const country = state.countries[countryKey];
       
-      const event: StreamingEvent = {
-        id: `event_${Date.now()}_${i}`,
-        timestamp: Date.now(),
-        type: eventType,
-        country: countryKey,
-        location: { lat: country.lat, lon: country.lon },
-        value: this.generateEventValue(eventType),
-        metadata: this.generateEventMetadata(eventType, countryKey)
-      };
+      // Get city data asynchronously
+      this.getCityForEvent(countryKey).then(city => {
+        const event: StreamingEvent = {
+          id: `event_${Date.now()}_${i}`,
+          timestamp: Date.now(),
+          type: eventType,
+          country: countryKey,
+          location: { lat: city.lat, lon: city.lon },
+          value: this.generateEventValue(eventType),
+          metadata: this.generateEventMetadata(eventType, countryKey, city.name)
+        };
 
-      state.streamData.realTimeEvents.push(event);
-      
-      // Create visual effects for this event
-      this.createEventEffects(event);
-      
-      // Keep only last 50 events
-      if (state.streamData.realTimeEvents.length > 50) {
-        state.streamData.realTimeEvents.shift();
-      }
+        state.streamData.realTimeEvents.push(event);
+        
+        // Create visual effects for this event
+        // this.createEventEffects(event);
+        
+        // Keep only last 50 events
+        if (state.streamData.realTimeEvents.length > 50) {
+          state.streamData.realTimeEvents.shift();
+        }
+      }).catch(() => {
+        // Fallback to country coordinates if city lookup fails
+        const fallbackCity = getRandomCity();
+        const event: StreamingEvent = {
+          id: `event_${Date.now()}_${i}`,
+          timestamp: Date.now(),
+          type: eventType,
+          country: countryKey,
+          location: { lat: fallbackCity.lat, lon: fallbackCity.lon },
+          value: this.generateEventValue(eventType),
+          metadata: this.generateEventMetadata(eventType, countryKey, fallbackCity.name)
+        };
+
+        state.streamData.realTimeEvents.push(event);
+        
+        // Keep only last 50 events
+        if (state.streamData.realTimeEvents.length > 50) {
+          state.streamData.realTimeEvents.shift();
+        }
+      });
+    }
+  }
+
+  private getWeightedEventType(): 'view' | 'lead' | 'sale' | 'transaction' {
+    // Probability distribution:
+    // - View events: 20x more likely than sale events
+    // - Transaction events: half as likely as sale events
+    // - Lead events: same probability as sale events
+    
+    const random = Math.random();
+    
+    // Total probability distribution:
+    // View: 20 units, Sale: 1 unit, Transaction: 0.5 units, Lead: 1 unit
+    // Total: 22.5 units
+    
+    if (random < 20/22.5) {
+      return 'view'; // ~88.9% probability
+    } else if (random < 21/22.5) {
+      return 'sale'; // ~4.4% probability
+    } else if (random < 21.5/22.5) {
+      return 'transaction'; // ~2.2% probability
+    } else {
+      return 'lead'; // ~4.4% probability
     }
   }
 
@@ -156,11 +216,15 @@ export class DataSimulationComponent {
     }
   }
 
-  private generateEventMetadata(eventType: string, countryKey: string): any {
+  private generateEventMetadata(eventType: string, countryKey: string, cityName?: string): any {
     const metadata: any = {
       country: countryKey,
       timestamp: Date.now()
     };
+
+    if (cityName) {
+      metadata.city = cityName;
+    }
 
     switch (eventType) {
       case 'sale':
@@ -350,15 +414,30 @@ export class DataSimulationComponent {
     // Process real-time events for analytics
     const recentEvents = state.streamData.realTimeEvents.slice(-10);
     
+    // Schedule visual effects to be spread out over 1 second
+    this.scheduleEventEffects(recentEvents);
+    
+    // Update payment methods and offers for sales (immediate)
     recentEvents.forEach(event => {
-      // Create visual effects based on event type
-      this.createEventEffects(event);
-      
-      // Update payment methods and offers for sales
       if (event.type === 'sale' && event.metadata) {
         this.updatePaymentMethods(event.metadata.paymentMethod || 'card');
         this.updateOffers(event.metadata.offer || 'Offer A', event.value);
       }
+    });
+  }
+
+  private scheduleEventEffects(events: StreamingEvent[]): void {
+    if (events.length === 0) return;
+    
+    const totalDuration = 1000; // 1 second in milliseconds
+    const interval = totalDuration / events.length;
+    
+    events.forEach((event, index) => {
+      const delay = index * interval;
+      
+      setTimeout(() => {
+        this.createEventEffects(event);
+      }, delay);
     });
   }
 
@@ -393,14 +472,6 @@ export class DataSimulationComponent {
       destinationBank.lat, 
       destinationBank.lon
     );
-  }
-
-  private createStreamingEffects(): void {
-    // Create view sparks (reduced frequency when focused)
-    const sparkCount = this.ui.isFocused ? 3 : 8;
-    for (let i = 0; i < sparkCount; i++) {
-      this.globe.createViewSpark();
-    }
   }
 
   private updatePaymentMethods(method: string): void {
@@ -486,7 +557,7 @@ export class DataSimulationComponent {
   }
 
   // Get streaming data for external consumption
-  getStreamingData(): any {
+  getStreamingData(): StreamingData {
     return {
       globalMetrics: state.globalMetrics,
       countryMetrics: Object.keys(state.countries).reduce((acc: any, key) => {
@@ -516,3 +587,18 @@ export class DataSimulationComponent {
     };
   }
 } 
+
+export type CountryMetrics = {
+  sales: number;
+  revenue: number;
+  lat: number;
+  lon: number;
+  weeklySales: number[];
+};
+
+export type StreamingData = {
+  globalMetrics: GlobalMetrics;
+  countryMetrics: Record<string, CountryMetrics>;
+  realTimeEvents: StreamingEvent[];
+  alerts: Alert[];
+};

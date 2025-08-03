@@ -31,6 +31,9 @@ export class GlobeComponent {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setSize(container.clientWidth, container.clientHeight);
     this.renderer.setPixelRatio(window.devicePixelRatio);
+    THREE.ColorManagement.enabled = false;
+    this.renderer.outputColorSpace = THREE.LinearSRGBColorSpace;    ;
+    this.renderer.useLegacyLights = true;
     container.appendChild(this.renderer.domElement);
 
     // Lighting
@@ -45,15 +48,11 @@ export class GlobeComponent {
     // Load globe texture
     const loader = new THREE.TextureLoader();
     loader.load(
-      'https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg', 
+      'https://raw.githubusercontent.com/chrisrzhou/react-globe/main/textures/globe.jpg', 
       (texture) => {
         const sphereGeo = new THREE.SphereGeometry(this.GLOBE_RADIUS, 64, 64);
-        const sphereMat = new THREE.MeshPhongMaterial({ 
-          map: texture, 
-          color: 0xaaaaaa, 
-          specular: 0x333333, 
-          shininess: 5 
-        });
+        const sphereMat = new THREE.MeshPhongMaterial({ map: texture, color: 0xaaaaaa, specular: 0x333333, shininess: 5 });
+        // sphereMat.colorSpace = THREE.SRGBColorSpace;
         this.globe = new THREE.Mesh(sphereGeo, sphereMat);
         this.group!.add(this.globe);
         this.drawBankHQs();
@@ -144,7 +143,7 @@ export class GlobeComponent {
 
     tween({ t: 0 }, { t: 1 }, 2000, 
       (val) => {
-        THREE.Quaternion.slerp(startQuaternion, targetQuaternion, this.group!.quaternion, val.t);
+        this.group!.quaternion.slerpQuaternions(startQuaternion, targetQuaternion, val.t);
       }, undefined, easeInOutCubic);
     
     tween({ z: this.camera!.position.z }, { z: 180 }, 2000, 
@@ -180,31 +179,56 @@ export class GlobeComponent {
     if (!this.group) return;
     const position = latLonToVector3(lat, lon, this.GLOBE_RADIUS);
     
-    // Adjust beam size based on focus state
-    const beamSize = this._isFocused ? 2 : 1;
-    const beamHeight = this._isFocused ? 60 : 40;
+    // Create multiple ripple rings
+    const numRings = 3;
+    const rings: THREE.Mesh[] = [];
     
-    const beamGeo = new THREE.CylinderGeometry(beamSize, beamSize * 1.5, beamHeight, 8, 1, true);
-    const beamMat = new THREE.MeshBasicMaterial({ color: 0x86efac, transparent: true, opacity: 0.8, side: THREE.DoubleSide });
-    const beam = new THREE.Mesh(beamGeo, beamMat);
-    beam.position.copy(position);
-    beam.lookAt(position.clone().multiplyScalar(2));
-    this.group!.add(beam);
+    for (let i = 0; i < numRings; i++) {
+      const ringGeo = new THREE.RingGeometry(2 + i * 2, 2.5 + i * 2, 32);
+      const ringMat = new THREE.MeshBasicMaterial({ 
+        color: 0x86efac, 
+        transparent: true, 
+        opacity: 0.8, 
+        side: THREE.DoubleSide 
+      });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.position.copy(position);
+      ring.lookAt(position.clone().multiplyScalar(2));
+      this.group!.add(ring);
+      rings.push(ring);
+    }
 
-    let opacity = 1;
-    const animateEffect = () => {
-      opacity -= 0.03;
-      beam.scale.y = opacity;
-      beam.material.opacity = opacity;
-      if (opacity > 0) {
-        requestAnimationFrame(animateEffect);
-      } else {
-        this.group!.remove(beam);
-        beam.geometry.dispose();
-        beam.material.dispose();
+    let time = 0;
+    const animateRipples = () => {
+      time += 0.02;
+      
+      let activeRings = 0;
+      rings.forEach((ring, index) => {
+        const delay = index * 0.3;
+        const ringTime = Math.max(0, time - delay);
+        
+        if (ringTime < 1.5) {
+          activeRings++;
+          const scale = 1 + ringTime * 3;
+          const opacity = 0.8 * (1 - ringTime / 1.5);
+          
+          ring.scale.set(scale, scale, scale);
+          (ring.material as THREE.Material).opacity = Math.max(0, opacity);
+        } else {
+          // Clean up ring
+          if (this.group!.children.includes(ring)) {
+            this.group!.remove(ring);
+            ring.geometry.dispose();
+            (ring.material as THREE.Material).dispose();
+          }
+        }
+      });
+      
+      if (activeRings > 0) {
+        requestAnimationFrame(animateRipples);
       }
     };
-    animateEffect();
+    animateRipples();
   }
 
   createRevenueArc(startLat: number, startLon: number, endLat: number, endLon: number): void {
@@ -246,13 +270,6 @@ export class GlobeComponent {
       }
     };
     animateArc();
-  }
-
-  createViewSpark(): void {
-    if (!this.group) return;
-    const lat = Math.random() * 180 - 90;
-    const lon = Math.random() * 360 - 180;
-    this.createViewSparkAtLocation(lat, lon);
   }
 
   createViewSparkAtLocation(lat: number, lon: number): void {

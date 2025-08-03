@@ -36,28 +36,28 @@ export class DashboardComponent extends HTMLElement {
           </div>
           <!-- Acquisition Funnel -->
           <div class="col-span-5 metric-card rounded-xl p-4 flex justify-around items-center">
-            <div class="text-center funnel-step">
+            <div class="text-center funnel-step flex-1 min-w-0">
               <p class="text-sm text-slate-400 uppercase">Views</p>
-              <p id="metric-views" class="text-4xl font-bold text-indigo-400 metric-value w-36">0</p>
+              <p id="metric-views" class="text-4xl font-bold text-indigo-400 metric-value w-full text-center">0</p>
             </div>
-            <div class="text-center funnel-step">
+            <div class="text-center funnel-step flex-1 min-w-0">
               <p class="text-sm text-slate-400 uppercase">Leads</p>
-              <p id="metric-leads" class="text-4xl font-bold text-indigo-400 metric-value w-36">0</p>
+              <p id="metric-leads" class="text-4xl font-bold text-indigo-400 metric-value w-full text-center">0</p>
             </div>
-            <div class="text-center">
+            <div class="text-center flex-1 min-w-0">
               <p class="text-sm text-slate-400 uppercase">Sales</p>
-              <p id="metric-sales" class="text-4xl font-bold text-indigo-400 metric-value w-36">0</p>
+              <p id="metric-sales" class="text-4xl font-bold text-indigo-400 metric-value w-full text-center">0</p>
             </div>
           </div>
           <!-- Monetization Funnel -->
           <div class="col-span-4 metric-card rounded-xl p-4 flex justify-around items-center">
-            <div class="text-center funnel-step">
+            <div class="text-center funnel-step flex-1 min-w-0">
               <p class="text-sm text-slate-400 uppercase">Transactions</p>
-              <p id="metric-transactions" class="text-3xl font-bold text-emerald-400 metric-value w-32">0</p>
+              <p id="metric-transactions" class="text-3xl font-bold text-emerald-400 metric-value w-full text-center">0</p>
             </div>
-            <div class="text-center">
+            <div class="text-center flex-1 min-w-0">
               <p class="text-sm text-slate-400 uppercase">Revenue</p>
-              <p id="metric-revenue" class="text-3xl font-bold text-emerald-400 metric-value w-32">$0</p>
+              <p id="metric-revenue" class="text-3xl font-bold text-emerald-400 metric-value w-full text-center">$0</p>
             </div>
           </div>
         </header>
