@@ -15,7 +15,7 @@ export interface CountryData {
   sales: number;
   revenue: number;
   lat: number;
-  lon: number;
+  lng: number;
   weeklySales: number[];
   metrics: {
     views: MetricData;
@@ -31,7 +31,7 @@ export interface CountryData {
 
 export interface BankData {
   lat: number;
-  lon: number;
+  lng: number;
 }
 
 export interface GlobalMetrics {
@@ -50,7 +50,7 @@ export interface StreamingEvent {
   timestamp: number;
   type: 'view' | 'lead' | 'sale' | 'transaction';
   country: string;
-  location: { lat: number; lon: number };
+  location: { lat: number; lng: number };
   value: number;
   metadata?: EventMetadata;
 }
@@ -171,7 +171,7 @@ export interface TopCountry {
   value: number;
   trend: number;
   lat: number;
-  lon: number;
+  lng: number;
 }
 
 export interface FormattedEvent extends StreamingEvent {

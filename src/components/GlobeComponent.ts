@@ -31,6 +31,7 @@ export class GlobeComponent {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setSize(container.clientWidth, container.clientHeight);
     this.renderer.setPixelRatio(window.devicePixelRatio);
+    // color fixes
     THREE.ColorManagement.enabled = false;
     this.renderer.outputColorSpace = THREE.LinearSRGBColorSpace;    ;
     this.renderer.useLegacyLights = true;
@@ -131,13 +132,13 @@ export class GlobeComponent {
     }
   }
 
-  zoomToCountry(countryData: { lat: number; lon: number }): void {
+  zoomToCountry(countryData: { lat: number; lng: number }): void {
     this._isFocused = true;
     this.autoRotate = false;
 
     const startQuaternion = new THREE.Quaternion().copy(this.group!.quaternion);
     const targetQuaternion = new THREE.Quaternion();
-    const countryVector = latLonToVector3(countryData.lat, countryData.lon, 1).normalize();
+    const countryVector = latLonToVector3(countryData.lat, countryData.lng, 1).normalize();
     const cameraVector = new THREE.Vector3(0, 0, 1);
     targetQuaternion.setFromUnitVectors(countryVector, cameraVector);
 
@@ -166,7 +167,7 @@ export class GlobeComponent {
 
   private drawBankHQs(): void {
     Object.values(state.banks).forEach(bank => {
-      const pos = latLonToVector3(bank.lat, bank.lon, this.GLOBE_RADIUS + 0.5);
+      const pos = latLonToVector3(bank.lat, bank.lng, this.GLOBE_RADIUS + 0.5);
       const bankGeo = new THREE.SphereGeometry(1.5, 16, 16);
       const bankMat = new THREE.MeshBasicMaterial({ color: 0xfacc15, transparent: true, opacity: 0.7 });
       const bankMesh = new THREE.Mesh(bankGeo, bankMat);
@@ -175,9 +176,9 @@ export class GlobeComponent {
     });
   }
 
-  createAcquisitionEvent(lat: number, lon: number): void {
+  createAcquisitionEvent(lat: number, lng: number): void {
     if (!this.group) return;
-    const position = latLonToVector3(lat, lon, this.GLOBE_RADIUS);
+    const position = latLonToVector3(lat, lng, this.GLOBE_RADIUS);
     
     // Create multiple ripple rings
     const numRings = 3;
@@ -272,9 +273,9 @@ export class GlobeComponent {
     animateArc();
   }
 
-  createViewSparkAtLocation(lat: number, lon: number): void {
+  createViewSparkAtLocation(lat: number, lng: number): void {
     if (!this.group) return;
-    const position = latLonToVector3(lat, lon, this.GLOBE_RADIUS + 0.5);
+    const position = latLonToVector3(lat, lng, this.GLOBE_RADIUS + 0.5);
     
     // Adjust spark size based on focus state
     const sparkSize = this._isFocused ? 1.2 : 0.6;
@@ -299,9 +300,9 @@ export class GlobeComponent {
     animateSpark();
   }
 
-  createLeadSparkAtLocation(lat: number, lon: number): void {
+  createLeadSparkAtLocation(lat: number, lng: number): void {
     if (!this.group) return;
-    const position = latLonToVector3(lat, lon, this.GLOBE_RADIUS + 0.5);
+    const position = latLonToVector3(lat, lng, this.GLOBE_RADIUS + 0.5);
     
     // Adjust spark size based on focus state
     const sparkSize = this._isFocused ? 1.4 : 0.8;
@@ -326,9 +327,9 @@ export class GlobeComponent {
     animateSpark();
   }
 
-  createTransactionSparkAtLocation(lat: number, lon: number): void {
+  createTransactionSparkAtLocation(lat: number, lng: number): void {
     if (!this.group) return;
-    const position = latLonToVector3(lat, lon, this.GLOBE_RADIUS + 0.5);
+    const position = latLonToVector3(lat, lng, this.GLOBE_RADIUS + 0.5);
     
     // Adjust spark size based on focus state
     const sparkSize = this._isFocused ? 1.6 : 1.0;

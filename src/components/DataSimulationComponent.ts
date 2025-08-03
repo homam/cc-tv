@@ -19,8 +19,8 @@ export class DataSimulationComponent {
     // Initialize enhanced data structure
     this.initializeEnhancedData();
 
-    (window as any).zoomToCountry = function(lat: number, lon: number) {
-      globe.zoomToCountry({ lat, lon });
+    (window as any).zoomToCountry = function(lat: number, lng: number) {
+      globe.zoomToCountry({ lat, lng });
     };
   }
 
@@ -106,22 +106,18 @@ export class DataSimulationComponent {
 
     // Update UI
     this.updateUI();
-
-    // Check for alerts
-    this.checkAlerts();
-    
   }
 
-  private async getCityForEvent(countryKey: string): Promise<{ lat: number; lon: number; name: string }> {
+  private async getCityForEvent(countryKey: string): Promise<{ lat: number; lng: number; name: string }> {
     // Try to get city from static data first (faster)
     const staticCity = getRandomCityByCountry(countryKey);
     if (staticCity) {
-      return { lat: staticCity.lat, lon: staticCity.lon, name: staticCity.name };
+      return { lat: staticCity.lat, lng: staticCity.lng, name: staticCity.name };
     }
 
     // Fallback to random city from any country
     const fallbackCity = getRandomCity();
-    return { lat: fallbackCity.lat, lon: fallbackCity.lon, name: fallbackCity.name };
+    return { lat: fallbackCity.lat, lng: fallbackCity.lng, name: fallbackCity.name };
   }
 
   private generateStreamingEvents(): void {
@@ -132,8 +128,7 @@ export class DataSimulationComponent {
     
     for (let i = 0; i < eventCount; i++) {
       const eventType = this.getWeightedEventType();
-      const countryKey = countries[Math.floor(Math.random() * countries.length)];
-      
+      const countryKey = countries[Math.floor(Math.random() * countries.length)];      
       // Get city data asynchronously
       this.getCityForEvent(countryKey).then(city => {
         const event: StreamingEvent = {
@@ -141,11 +136,12 @@ export class DataSimulationComponent {
           timestamp: Date.now(),
           type: eventType,
           country: countryKey,
-          location: { lat: city.lat, lon: city.lon },
+          location: { lat: city.lat, lng: city.lng },
           value: this.generateEventValue(eventType),
           metadata: this.generateEventMetadata(eventType, countryKey, city.name)
         };
 
+        console.log(city, event);
         state.streamData.realTimeEvents.push(event);
         
         // Create visual effects for this event
@@ -163,7 +159,7 @@ export class DataSimulationComponent {
           timestamp: Date.now(),
           type: eventType,
           country: countryKey,
-          location: { lat: fallbackCity.lat, lon: fallbackCity.lon },
+          location: { lat: fallbackCity.lat, lng: fallbackCity.lng },
           value: this.generateEventValue(eventType),
           metadata: this.generateEventMetadata(eventType, countryKey, fallbackCity.name)
         };
@@ -442,21 +438,21 @@ export class DataSimulationComponent {
   }
 
   private createEventEffects(event: StreamingEvent): void {
-    const { lat, lon } = event.location;
+    const { lat, lng } = event.location;
     
     switch (event.type) {
       case 'view':
-        this.globe.createViewSparkAtLocation(lat, lon);
+        this.globe.createViewSparkAtLocation(lat, lng);
         break;
       case 'lead':
-        this.globe.createLeadSparkAtLocation(lat, lon);
+        this.globe.createLeadSparkAtLocation(lat, lng);
         break;
       case 'sale':
-        this.globe.createAcquisitionEvent(lat, lon);
+        this.globe.createAcquisitionEvent(lat, lng);
         this.createRevenueArc(event);
         break;
       case 'transaction':
-        this.globe.createTransactionSparkAtLocation(lat, lon);
+        this.globe.createTransactionSparkAtLocation(lat, lng);
         break;
     }
   }
@@ -468,9 +464,9 @@ export class DataSimulationComponent {
     
     this.globe.createRevenueArc(
       event.location.lat, 
-      event.location.lon, 
+      event.location.lng, 
       destinationBank.lat, 
-      destinationBank.lon
+      destinationBank.lng
     );
   }
 
@@ -484,24 +480,6 @@ export class DataSimulationComponent {
     if (offer && state.offers[offer] !== undefined) {
       state.offers[offer] += amount;
     }
-  }
-
-  private checkAlerts(): void {
-    // Check for unusual activity patterns
-    const recentEvents = state.streamData.realTimeEvents.slice(-20);
-    const salesCount = recentEvents.filter(e => e.type === 'sale').length;
-    
-    if (salesCount > 5) {
-      this.createAlert('High sales activity detected', 'success');
-    }
-    
-    // Check for conversion rate drops
-    Object.keys(state.countries).forEach(countryKey => {
-      const country = state.countries[countryKey];
-      if (country.metrics.conversionRate.current < 5 && country.metrics.leads.current > 10) {
-        this.createAlert(`Low conversion rate in ${countryKey}`, 'warning');
-      }
-    });
   }
 
   private createAlert(message: string, type: 'success' | 'warning' | 'error' | 'info'): void {
@@ -540,8 +518,8 @@ export class DataSimulationComponent {
       if (this.ui.isFocused) return;
 
       const sortedCountries = Object.entries(state.countries)
+        .filter(entry => entry[1].metrics.sales.current > 0)
         .sort((a, b) => b[1].metrics.sales.current - a[1].metrics.sales.current)
-        .slice(0, 5);
       const [countryName, countryData] = sortedCountries[Math.floor(Math.random() * sortedCountries.length)];
       
       this.ui.setFocusView(countryName);
@@ -592,7 +570,7 @@ export type CountryMetrics = {
   sales: number;
   revenue: number;
   lat: number;
-  lon: number;
+  lng: number;
   weeklySales: number[];
 };
 

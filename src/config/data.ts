@@ -14,19 +14,19 @@ export const state: DashboardState = {
   paymentMethods: { card: 1100, applePay: 450, googlePay: 270 },
   offers: { 'Offer A': 45000, 'Offer B': 30000, 'Offer C': 20420 },
   banks: {
-    'Rapyd': { lat: 51.5074, lon: -0.1278 },
-    'Shift4': { lat: 40.5562, lon: -75.4852 },
-    'Paynt': { lat: 54.6872, lon: 25.2797 },
-    'Paynetics': { lat: 42.6977, lon: 23.3219 },
-    'Worldline': { lat: 48.8857, lon: 2.2413 },
-    'Paysafe': { lat: 25.276987, lon: 55.296249 }
+    'Rapyd': { lat: 51.5074, lng: -0.1278 },
+    'Shift4': { lat: 40.5562, lng: -75.4852 },
+    'Paynt': { lat: 54.6872, lng: 25.2797 },
+    'Paynetics': { lat: 42.6977, lng: 23.3219 },
+    'Worldline': { lat: 48.8857, lng: 2.2413 },
+    'Paysafe': { lat: 25.276987, lng: 55.296249 }
   },
   countries: {
-    'USA': { 
+    'US': { 
       sales: 500, 
       revenue: 25000, 
       lat: 37.0902, 
-      lon: -95.7129, 
+      lng: -95.7129, 
       weeklySales: [30, 45, 50, 60, 80, 90, 145],
       metrics: {
         views: { current: 50000, trend: 0, hourly: [] },
@@ -39,11 +39,11 @@ export const state: DashboardState = {
         conversionRate: { current: 12.5, trend: 0, hourly: [] }
       }
     },
-    'Germany': { 
+    'DE': { 
       sales: 250, 
       revenue: 12500, 
       lat: 51.1657, 
-      lon: 10.4515, 
+      lng: 10.4515, 
       weeklySales: [15, 20, 25, 30, 40, 50, 70],
       metrics: {
         views: { current: 25000, trend: 0, hourly: [] },
@@ -56,11 +56,11 @@ export const state: DashboardState = {
         conversionRate: { current: 12.5, trend: 0, hourly: [] }
       }
     },
-    'UK': { 
+    'GB': { 
       sales: 210, 
       revenue: 11000, 
       lat: 55.3781, 
-      lon: -3.4360, 
+      lng: -3.4360, 
       weeklySales: [10, 15, 20, 25, 35, 45, 60],
       metrics: {
         views: { current: 21000, trend: 0, hourly: [] },
@@ -73,11 +73,11 @@ export const state: DashboardState = {
         conversionRate: { current: 12.5, trend: 0, hourly: [] }
       }
     },
-    'Canada': { 
+    'CA': { 
       sales: 180, 
       revenue: 9000, 
       lat: 56.1304, 
-      lon: -106.3468, 
+      lng: -106.3468, 
       weeklySales: [8, 12, 18, 22, 30, 40, 50],
       metrics: {
         views: { current: 18000, trend: 0, hourly: [] },
@@ -90,11 +90,11 @@ export const state: DashboardState = {
         conversionRate: { current: 12.5, trend: 0, hourly: [] }
       }
     },
-    'Australia': { 
+    'ES': { 
       sales: 150, 
       revenue: 8000, 
-      lat: -25.2744, 
-      lon: 133.7751, 
+      lat: 40.4637, 
+      lng: -3.7492, 
       weeklySales: [7, 10, 15, 20, 25, 33, 40],
       metrics: {
         views: { current: 15000, trend: 0, hourly: [] },
@@ -107,11 +107,28 @@ export const state: DashboardState = {
         conversionRate: { current: 12.5, trend: 0, hourly: [] }
       }
     },
-    'France': { 
+    'AU': { 
+      sales: 150, 
+      revenue: 8000, 
+      lat: -25.2744, 
+      lng: 133.7751, 
+      weeklySales: [7, 10, 15, 20, 25, 33, 40],
+      metrics: {
+        views: { current: 15000, trend: 0, hourly: [] },
+        leads: { current: 1200, trend: 0, hourly: [] },
+        sales: { current: 150, trend: 0, hourly: [] },
+        transactions: { current: 150, trend: 0, hourly: [] },
+        revenue: { current: 8000, trend: 0, hourly: [] },
+        cost: { current: 1050, trend: 0, hourly: [] },
+        ecpa: { current: 0.875, trend: 0, hourly: [] },
+        conversionRate: { current: 12.5, trend: 0, hourly: [] }
+      }
+    },
+    'FR': { 
       sales: 120, 
       revenue: 6000, 
       lat: 46.6033, 
-      lon: 1.8883, 
+      lng: 1.8883, 
       weeklySales: [5, 8, 12, 18, 22, 25, 30],
       metrics: {
         views: { current: 12000, trend: 0, hourly: [] },
@@ -124,11 +141,11 @@ export const state: DashboardState = {
         conversionRate: { current: 12.5, trend: 0, hourly: [] }
       }
     },
-    'Brazil': { 
+    'BR': { 
       sales: 95, 
       revenue: 4500, 
       lat: -14.2350, 
-      lon: -51.9253, 
+      lng: -51.9253, 
       weeklySales: [4, 6, 10, 14, 18, 21, 22],
       metrics: {
         views: { current: 9500, trend: 0, hourly: [] },
@@ -141,11 +158,11 @@ export const state: DashboardState = {
         conversionRate: { current: 12.5, trend: 0, hourly: [] }
       }
     },
-    'Japan': { 
+    'JP': { 
       sales: 85, 
       revenue: 4800, 
       lat: 36.2048, 
-      lon: 138.2529, 
+      lng: 138.2529, 
       weeklySales: [3, 5, 8, 12, 16, 20, 21],
       metrics: {
         views: { current: 8500, trend: 0, hourly: [] },
@@ -158,11 +175,28 @@ export const state: DashboardState = {
         conversionRate: { current: 12.5, trend: 0, hourly: [] }
       }
     },
-    'India': { 
+    'AE': { 
+      sales: 80, 
+      revenue: 4000, 
+      lat: 23.4241, 
+      lng: 53.8478, 
+      weeklySales: [3, 5, 8, 12, 16, 20, 21],
+      metrics: {
+        views: { current: 8000, trend: 0, hourly: [] },
+        leads: { current: 640, trend: 0, hourly: [] },
+        sales: { current: 80, trend: 0, hourly: [] },
+        transactions: { current: 80, trend: 0, hourly: [] },
+        revenue: { current: 4000, trend: 0, hourly: [] },
+        cost: { current: 560, trend: 0, hourly: [] },
+        ecpa: { current: 0.875, trend: 0, hourly: [] },
+        conversionRate: { current: 12.5, trend: 0, hourly: [] }
+      }
+    },
+    'SA': { 
       sales: 75, 
       revenue: 3000, 
-      lat: 20.5937, 
-      lon: 78.9629, 
+      lat: 23.8859, 
+      lng: 45.0792, 
       weeklySales: [2, 4, 7, 11, 15, 16, 20],
       metrics: {
         views: { current: 7500, trend: 0, hourly: [] },
@@ -175,11 +209,28 @@ export const state: DashboardState = {
         conversionRate: { current: 12.5, trend: 0, hourly: [] }
       }
     },
-    'Nigeria': { 
+    'IN': { 
+      sales: 75, 
+      revenue: 3000, 
+      lat: 20.5937, 
+      lng: 78.9629, 
+      weeklySales: [2, 4, 7, 11, 15, 16, 20],
+      metrics: {
+        views: { current: 7500, trend: 0, hourly: [] },
+        leads: { current: 600, trend: 0, hourly: [] },
+        sales: { current: 75, trend: 0, hourly: [] },
+        transactions: { current: 75, trend: 0, hourly: [] },
+        revenue: { current: 3000, trend: 0, hourly: [] },
+        cost: { current: 525, trend: 0, hourly: [] },
+        ecpa: { current: 0.875, trend: 0, hourly: [] },
+        conversionRate: { current: 12.5, trend: 0, hourly: [] }
+      }
+    },
+    'NG': { 
       sales: 50, 
       revenue: 2000, 
       lat: 9.0820, 
-      lon: 8.6753, 
+      lng: 8.6753, 
       weeklySales: [1, 2, 4, 6, 10, 12, 15],
       metrics: {
         views: { current: 5000, trend: 0, hourly: [] },

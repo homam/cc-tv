@@ -28,9 +28,9 @@ export function countUp(el: HTMLElement, end: number, duration = 1500, prefix = 
   requestAnimationFrame(frame);
 }
 
-export function latLonToVector3(lat: number, lon: number, radius: number): THREE.Vector3 {
+export function latLonToVector3(lat: number, lng: number, radius: number): THREE.Vector3 {
   const phi = (90 - lat) * (Math.PI / 180);
-  const theta = (lon + 180) * (Math.PI / 180);
+  const theta = (lng + 180) * (Math.PI / 180);
   const x = -(radius * Math.sin(phi) * Math.cos(theta));
   const y = radius * Math.cos(phi);
   const z = radius * Math.sin(phi) * Math.sin(theta);
@@ -107,7 +107,7 @@ export class AnalyticsHelpers {
         value: (data as any)[metric] || 0,
         trend: 0,
         lat: data.lat,
-        lon: data.lon
+        lng: data.lng
       }))
       .sort((a, b) => b.value - a.value)
       .slice(0, limit);
