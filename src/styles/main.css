@@ -71,10 +71,20 @@ body {
 
 #globe-container {
     cursor: grab;
+    min-height: 400px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #globe-container:active {
     cursor: grabbing;
+}
+
+/* Debug styles to ensure globe is visible */
+#globe-container canvas {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .chart-container {

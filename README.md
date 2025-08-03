@@ -1,250 +1,215 @@
-# CC-TV Dashboard - Enhanced Streaming Analytics
+# Live Performance Dashboard
 
-A real-time analytics dashboard with comprehensive streaming data visualization for views, leads, sales, transactions, revenue, cost, and eCPA metrics both globally and per country.
+A modern, real-time analytics dashboard built with Web Components, TypeScript, and Vite. This dashboard provides live performance metrics with a 3D globe visualization, interactive charts, and streaming data simulation.
 
-## 🚀 Features
+## Features
 
-### Enhanced Data Structure
-- **Global Metrics**: Comprehensive tracking of views, leads, sales, transactions, revenue, cost, eCPA, and conversion rates
-- **Country-Specific Metrics**: Detailed analytics for each country with individual performance indicators
-- **Real-Time Streaming**: Live data updates with event-driven architecture
-- **Trend Analysis**: Hourly trend calculations and performance indicators
+- **Web Components Architecture**: Modular, reusable components
+- **TypeScript**: Full type safety and better developer experience
+- **Vite Build System**: Fast development and optimized production builds
+- **3D Globe Visualization**: Interactive Three.js globe with real-time events
+- **Real-time Data Streaming**: Simulated live data with visual effects
+- **Interactive Charts**: Chart.js powered visualizations
+- **Responsive Design**: Tailwind CSS for modern, responsive UI
+- **Focus Mode**: Zoom into specific countries for detailed analysis
+
+## Tech Stack
+
+- **Frontend**: Web Components, TypeScript, Vite
+- **3D Graphics**: Three.js
+- **Charts**: Chart.js
+- **Styling**: Tailwind CSS
+- **Build Tool**: Vite
+
+## Project Structure
+
+```
+src/
+├── components/           # Web Components
+│   ├── DashboardComponent.ts
+│   ├── GlobeComponent.ts
+│   ├── ChartsComponent.ts
+│   ├── UIComponent.ts
+│   └── DataSimulationComponent.ts
+├── config/              # Configuration and data
+│   └── data.ts
+├── types/               # TypeScript type definitions
+│   └── index.ts
+├── utils/               # Utility functions
+│   └── helpers.ts
+├── styles/              # CSS styles
+│   └── main.css
+├── index.html           # Main HTML file
+└── main.ts             # Application entry point
+```
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd cc-tv
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:3000`
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+The built files will be in the `dist/` directory.
+
+### Type Checking
+
+```bash
+npm run type-check
+```
+
+## Web Components
+
+### DashboardComponent
+The main dashboard component that orchestrates all other components and manages the overall layout.
+
+### GlobeComponent
+Handles the 3D globe visualization using Three.js. Features:
+- Interactive rotation and zoom
+- Real-time event visualization
+- Country focus mode
+- Revenue arc animations
+
+### ChartsComponent
+Manages all Chart.js visualizations:
+- Payment methods chart
+- Revenue by offers chart
+- Weekly trends chart
+- Top countries chart
+- Focus country chart
+
+### UIComponent
+Handles all user interface updates and interactions:
+- Real-time metric updates
+- Trend indicators
+- Progress bars
+- Streaming events panel
+- Alerts system
+
+### DataSimulationComponent
+Simulates real-time data streaming:
+- Event generation
+- Metric calculations
+- Visual effects coordination
+- Alert system
+
+## Data Flow
+
+1. **Data Simulation** generates streaming events
+2. **Globe Component** creates visual effects on the 3D globe
+3. **Charts Component** updates chart visualizations
+4. **UI Component** updates metrics and indicators
+5. **Dashboard Component** orchestrates all updates
+
+## Key Features
+
+### Real-time Metrics
+- Views, leads, sales, transactions, revenue
+- Conversion rates and CPA
+- Trend indicators with animations
+- Progress bars for revenue targets
+
+### 3D Globe Visualization
+- Interactive globe with country markers
+- Real-time event sparks and beams
+- Revenue arc animations
+- Focus mode for country-specific analysis
+
+### Interactive Charts
+- Payment methods distribution
+- Revenue by offers
+- Weekly trends
+- Top performing countries
+- Country-specific analytics
 
 ### Streaming Analytics
-- **Real-Time Events**: Live tracking of views, leads, sales, and transactions
-- **Event Metadata**: Rich event data including payment methods, offers, customer segments, and device information
-- **Alert System**: Intelligent alerts for unusual activity patterns and performance issues
-- **Performance Indicators**: ROI, profit margin, average order value, and lead-to-sale ratios
+- Real-time event generation
+- Live metric updates
+- Visual effects and animations
+- Alert system for anomalies
 
-### Data Visualization
-- **Interactive Globe**: 3D globe visualization with real-time event sparks and revenue arcs
-- **Metrics Dashboard**: Real-time display of all key performance indicators
-- **Country Focus**: Detailed country-specific analytics with drill-down capabilities
-- **Trend Indicators**: Visual trend analysis with color-coded indicators
+## Development
 
-## 📊 Data Structure
+### Adding New Components
 
-### Global Metrics
-```javascript
-globalMetrics: {
-    views: { current: number, trend: number, hourly: [] },
-    leads: { current: number, trend: number, hourly: [] },
-    sales: { current: number, trend: number, hourly: [] },
-    transactions: { current: number, trend: number, hourly: [] },
-    revenue: { current: number, trend: number, hourly: [] },
-    cost: { current: number, trend: number, hourly: [] },
-    ecpa: { current: number, trend: number, hourly: [] },
-    conversionRate: { current: number, trend: number, hourly: [] }
-}
-```
+1. Create a new TypeScript file in `src/components/`
+2. Extend `HTMLElement` for Web Components
+3. Implement lifecycle methods (`connectedCallback`, `disconnectedCallback`)
+4. Register the component with `customElements.define()`
 
-### Country Metrics
-Each country includes the same comprehensive metrics structure with country-specific data and performance indicators.
+### Adding New Charts
 
-### Streaming Events
-```javascript
-streamData: {
-    realTimeEvents: [
-        {
-            id: string,
-            timestamp: number,
-            type: 'view' | 'lead' | 'sale' | 'transaction',
-            country: string,
-            location: { lat: number, lon: number },
-            value: number,
-            metadata: {
-                paymentMethod?: string,
-                offer?: string,
-                customerSegment?: string,
-                source?: string,
-                quality?: string,
-                device?: string,
-                referrer?: string
-            }
-        }
-    ],
-    alerts: [
-        {
-            id: string,
-            message: string,
-            type: 'success' | 'warning' | 'error' | 'info',
-            timestamp: number
-        }
-    ]
-}
-```
+1. Add chart configuration to `src/config/data.ts`
+2. Implement chart methods in `ChartsComponent`
+3. Update data simulation to provide chart data
 
-## 🛠️ Architecture
+### Styling
 
-### Core Modules
+The project uses Tailwind CSS for styling. Custom styles can be added to `src/styles/main.css`.
 
-#### DataSimulation (`src/js/modules/dataSimulation.js`)
-- **Streaming Data Generation**: Creates realistic streaming events every 2 seconds
-- **Event Processing**: Handles different event types with appropriate metadata
-- **Metrics Calculation**: Updates global and country-specific metrics in real-time
-- **Alert System**: Monitors performance and generates intelligent alerts
-- **Data Export**: Provides comprehensive data export capabilities
+## Performance Optimizations
 
-#### UI (`src/js/modules/ui.js`)
-- **Metrics Display**: Real-time display of all key performance indicators
-- **Event Visualization**: Shows streaming events with rich metadata
-- **Alert Management**: Displays and manages system alerts
-- **Country Focus**: Handles country-specific analytics views
-- **Report Generation**: Creates comprehensive analytics reports
+- **Lazy Loading**: Components are loaded on demand
+- **Efficient Rendering**: Chart updates use minimal re-renders
+- **Memory Management**: Proper cleanup of Three.js objects
+- **Bundle Optimization**: Vite optimizes the final bundle
 
-#### AnalyticsHelpers (`src/js/utils/helpers.js`)
-- **Data Formatting**: Currency, percentage, and number formatting utilities
-- **Trend Calculation**: Computes trend indicators and performance metrics
-- **Event Processing**: Handles event metadata and formatting
-- **Performance Indicators**: Calculates ROI, profit margins, and other KPIs
-- **Data Export**: Comprehensive data export and reporting utilities
+## Browser Support
 
-### Data Flow
+- Chrome/Edge (latest)
+- Firefox (latest)
+- Safari (latest)
 
-1. **Event Generation**: `DataSimulation` generates realistic streaming events
-2. **Metrics Update**: Events trigger updates to global and country metrics
-3. **UI Refresh**: Updated metrics are displayed in real-time
-4. **Visual Effects**: Globe and charts update with new data
-5. **Alert Monitoring**: System monitors for unusual patterns and generates alerts
+## License
 
-## 🎯 Key Metrics
+This project is licensed under the MIT License.
 
-### Primary Metrics
-- **Views**: Total page views and traffic
-- **Leads**: Generated leads and prospects
-- **Sales**: Completed sales transactions
-- **Transactions**: Total transaction volume
-- **Revenue**: Total revenue generated
-- **Cost**: Total cost of operations
-- **eCPA**: Effective cost per acquisition
-- **Conversion Rate**: Lead to sale conversion percentage
+## Contributing
 
-### Performance Indicators
-- **ROI**: Return on investment percentage
-- **Profit Margin**: Revenue minus cost percentage
-- **Average Order Value**: Revenue per sale
-- **Lead to Sale Ratio**: Conversion efficiency
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-## 🔧 Usage
+## Troubleshooting
 
-### Starting the Dashboard
-```javascript
-import { DataSimulation } from './modules/dataSimulation.js';
-import { UI } from './modules/ui.js';
+### Common Issues
 
-const dataSim = new DataSimulation(globe, charts, ui);
-dataSim.startStreaming();
-```
+1. **Three.js not loading**: Ensure Three.js is properly imported
+2. **Charts not rendering**: Check if Chart.js is available
+3. **TypeScript errors**: Run `npm run type-check` to identify issues
+4. **Build errors**: Clear `node_modules` and reinstall dependencies
 
-### Accessing Analytics Data
-```javascript
-import { AnalyticsHelpers } from './utils/helpers.js';
+### Development Tips
 
-// Get global metrics
-const globalMetrics = AnalyticsHelpers.getGlobalMetrics();
-
-// Get country-specific metrics
-const countryMetrics = AnalyticsHelpers.getCountryMetrics('USA');
-
-// Get streaming events
-const events = AnalyticsHelpers.getStreamingEvents(10);
-
-// Export comprehensive data
-const exportData = AnalyticsHelpers.exportMetricsData();
-```
-
-### Data Export
-```javascript
-// Export analytics data
-ui.exportData();
-
-// Generate comprehensive report
-ui.generateReport();
-```
-
-## 📈 Event Types
-
-### View Events
-- **Type**: `view`
-- **Value**: Number of page views
-- **Metadata**: Device type, referrer source
-
-### Lead Events
-- **Type**: `lead`
-- **Value**: Number of leads generated
-- **Metadata**: Lead source, quality rating
-
-### Sale Events
-- **Type**: `sale`
-- **Value**: Sale amount in currency
-- **Metadata**: Payment method, offer, customer segment
-
-### Transaction Events
-- **Type**: `transaction`
-- **Value**: Transaction amount
-- **Metadata**: Payment processing details
-
-## 🎨 Visualization Features
-
-### Globe Effects
-- **View Sparks**: Visual indicators for page views
-- **Lead Sparks**: Special effects for lead generation
-- **Acquisition Events**: Highlight successful sales
-- **Revenue Arcs**: Show money flow to payment processors
-
-### Dashboard Elements
-- **Metrics Cards**: Real-time display of all KPIs
-- **Trend Indicators**: Visual trend analysis with arrows and colors
-- **Event Stream**: Live feed of streaming events
-- **Alert Panel**: System alerts and notifications
-- **Performance Grid**: Key performance indicators
-
-## 🔍 Monitoring & Alerts
-
-### Alert Types
-- **High Sales Activity**: Detects unusual sales spikes
-- **Low Conversion Rate**: Warns about poor conversion performance
-- **Performance Issues**: Monitors for system anomalies
-
-### Alert Management
-- Real-time alert generation
-- Time-based alert tracking
-- Alert severity classification
-- Historical alert analysis
-
-## 📊 Reporting
-
-### Export Formats
-- **JSON Export**: Complete data structure export
-- **HTML Reports**: Formatted analytics reports
-- **Real-time Dashboards**: Live performance monitoring
-
-### Report Contents
-- Summary metrics and KPIs
-- Top performing countries
-- Recent activity timeline
-- System alerts and notifications
-- Performance trend analysis
-
-## 🚀 Performance
-
-- **Real-time Updates**: 2-second update intervals
-- **Event Buffering**: Efficient event processing and storage
-- **Memory Management**: Automatic cleanup of old data
-- **Scalable Architecture**: Modular design for easy expansion
-
-## 🔧 Configuration
-
-### Update Intervals
-- **Streaming**: 2 seconds
-- **UI Updates**: Real-time
-- **Alert Checks**: Every update cycle
-- **Data Cleanup**: Automatic hourly cleanup
-
-### Data Retention
-- **Events**: Last 50 events
-- **Alerts**: Last 10 alerts
-- **Hourly Data**: Last 24 hours
-- **Historical Data**: Configurable retention
-
-This enhanced module provides a comprehensive streaming analytics solution with detailed metrics tracking, real-time visualization, and intelligent alerting for optimal performance monitoring. 
+- Use browser dev tools to inspect Web Components
+- Check the console for TypeScript compilation errors
+- Monitor performance with browser performance tools
+- Use Vite's hot module replacement for fast development 
