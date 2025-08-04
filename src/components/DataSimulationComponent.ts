@@ -18,10 +18,6 @@ export class DataSimulationComponent {
     
     // Initialize enhanced data structure
     this.initializeEnhancedData();
-
-    (window as any).zoomToCountry = function(lat: number, lng: number) {
-      globe.zoomToCountry({ lat, lng });
-    };
   }
 
   private initializeEnhancedData(): void {

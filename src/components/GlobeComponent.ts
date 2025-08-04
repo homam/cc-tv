@@ -27,6 +27,13 @@ export class GlobeComponent {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 1, 1000);
     this.camera.position.z = this.originalCameraZ;
+    (window as any).THREE = THREE;
+    (window as any).camera = this.camera;
+    (window as any).zoomOut = this.zoomOut.bind(this);
+    const self = this;
+    (window as any).zoomToCountry = function(lat: number, lng: number) {
+      self.zoomToCountry({ lat, lng });
+    };
     
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setSize(container.clientWidth, container.clientHeight);
@@ -132,6 +139,7 @@ export class GlobeComponent {
     }
   }
 
+
   zoomToCountry(countryData: { lat: number; lng: number }): void {
     this._isFocused = true;
     this.autoRotate = false;
@@ -152,8 +160,13 @@ export class GlobeComponent {
   }
 
   zoomOut(): void {
-    tween({ z: this.camera!.position.z }, { z: this.originalCameraZ }, 2000, 
-      (val) => this.camera!.position.z = val.z, 
+    // const startQuaternion = new THREE.Quaternion().copy(this.group!.quaternion);
+
+    tween({ z: this.camera!.position.z, t: 0 }, { z: this.originalCameraZ, t: 1 }, 2000, 
+      (val) => {
+        this.camera!.position.z = val.z;
+        // this.group!.quaternion.slerpQuaternions(startQuaternion, new THREE.Quaternion().setFromEuler(this._startQuaternion!), val.t);
+      },
       () => {
         const euler = new THREE.Euler().setFromQuaternion(this.group!.quaternion, 'YXZ');
         this.rotX = euler.x;
