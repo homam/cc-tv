@@ -3,7 +3,7 @@ import type { GlobeComponent } from './GlobeComponent.js';
 import type { ChartsComponent } from './ChartsComponent.js';
 import type { UIComponent } from './UIComponent.js';
 import type { StreamingEvent, Alert, GlobalMetrics } from '../types/index.js';
-import { getRandomCity, getRandomCityByCountry, majorCities } from '../config/cities-data.js';
+import { getRandomCity, getRandomCityByCountry } from '../config/cities-data.js';
 
 export class DataSimulationComponent {
   private globe: GlobeComponent;
@@ -478,21 +478,7 @@ export class DataSimulationComponent {
     }
   }
 
-  private createAlert(message: string, type: 'success' | 'warning' | 'error' | 'info'): void {
-    const alert: Alert = {
-      id: `alert_${Date.now()}`,
-      message,
-      type,
-      timestamp: Date.now()
-    };
-    
-    state.streamData.alerts.push(alert);
-    
-    // Keep only last 10 alerts
-    if (state.streamData.alerts.length > 10) {
-      state.streamData.alerts.shift();
-    }
-  }
+
 
   private updateUI(): void {
     this.ui.updateMetrics();

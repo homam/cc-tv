@@ -7,7 +7,20 @@ export type CityData = {
   population: number;
 };
 
-export const majorCities = countriesAndCities.flatMap(country => country.cities);
+// Helper function to convert raw city data to our simplified format
+function mapCityData(rawCity: any): CityData {
+  return {
+    name: rawCity.name,
+    lat: rawCity.lat,
+    lng: rawCity.lng,
+    population: rawCity.population || 0
+  };
+}
+
+export const majorCities: CityData[] = countriesAndCities.flatMap(country => 
+  country.cities.map(mapCityData)
+);
+
 // Function to get a random city
 export function getRandomCity(): CityData {
   return majorCities[Math.floor(Math.random() * majorCities.length)];
@@ -15,7 +28,9 @@ export function getRandomCity(): CityData {
 
 // Function to get cities by country
 export function getCitiesByCountry(iso2: string): CityData[] {
-  return countriesAndCities.filter(country => country.iso2 === iso2).flatMap(country => country.cities);
+  return countriesAndCities
+    .filter(country => country.iso2 === iso2)
+    .flatMap(country => country.cities.map(mapCityData));
 }
 
 // Function to get a random city from a specific country
